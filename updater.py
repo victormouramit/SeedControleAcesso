@@ -4,11 +4,13 @@ import zipfile
 import os
 import sys
 
-VERSAO_ATUAL = "0.1.0"
+VERSAO_ATUAL = "0.1.1"
 URL_INFO = "https://raw.githubusercontent.com/victormouramit/SeedControleAcesso/refs/heads/main/update.json"
+DOWNLOAD_VERSION = ""
 def tem_update():
     info = requests.get(URL_INFO).json()
     ultima = info["version"]
+    DOWNLOAD_VERSION = ultima
     print(ultima)
     return ultima, ultima != VERSAO_ATUAL, info["download_url"]
 
@@ -18,21 +20,13 @@ def aplicar_update(url):
     response = requests.get(url, stream=True)
     print(url)
 
-    with open("0.1.zip", "wb") as f:
+    with open(f"{DOWNLOAD_VERSION}.zip", "wb") as f:
         shutil.copyfileobj(response.raw, f)
 
     # extrai tudo por cima do cliente atual
-    with zipfile.ZipFile("0.1.zip", "r") as z:
+    with zipfile.ZipFile(f"{DOWNLOAD_VERSION}.zip", "r") as z:
         z.extractall(".")
 
-    os.remove("0.1.zip")
+    os.remove(f"{DOWNLOAD_VERSION}.zip")
     print("Atualização aplicada! Reiniciando...")
     os.execl(sys.executable, sys.executable, *sys.argv)
-
-ultima, precisa, url = tem_update()
-
-if precisa:
-    print(f"Nova versão {ultima} disponível! 🍰✨")
-    aplicar_update(url)
-else:
-    print("Você já está na última versão 💖✨")

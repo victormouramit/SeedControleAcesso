@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from updater import *
 
+
 root = Tk()
 root.title("CONTROLE")
 frm = ttk.Frame(root,padding=10)
@@ -33,8 +34,21 @@ def un_block():
     painel_4_subir_btn.config(state=state)
     painel_4_descer_btn.config(state=state)
 
+ultima, precisa, url = tem_update()
+v_var = StringVar()
+if precisa:
+    print(f"Nova versão {ultima} disponível! 🍰✨")
+    v_var.set(f"Nova versão {ultima} disponível. Baixando Atualização...")
+    aplicar_update(url)
+else:
+    print("Você já está na última versão 💖✨")
+
+
 ttk.Button(frm,text="Bloquear/Desbloquear",command=un_block).grid(column=0,row=0)
-ttk.Label(frm,text=f"v{VERSAO_ATUAL}").grid(column=0,row=1)
+ttk.Label(frm,text=f"v{VERSAO_ATUAL}",foreground="green").grid(column=0,row=1)
+
+v = ttk.Label(frm,text="",textvariable=v_var)
+v.grid(column=0,row=2)
 
 # Painel 01
 ttk.Label(frm,text="Painel 1:").grid(column=1,row=0)
