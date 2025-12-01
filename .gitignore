@@ -1,5 +1,6 @@
 /dist
-/build
+/build/gui
 /.old
 /__pycache__
 gui.spec
+.gitignore
