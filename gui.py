@@ -25,6 +25,7 @@ def un_block():
     painel_4_entry.config(state=state)
 
 ttk.Button(frm,text="Bloquear/Desbloquear",command=un_block).grid(column=0,row=0)
+
 # Painel 01
 ttk.Label(frm,text="Painel 1:").grid(column=1,row=0)
 painel_1_value = StringVar(value="0")
