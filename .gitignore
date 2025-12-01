@@ -2,5 +2,7 @@ dist/
 .old/
 __pycache__/
 gui.spec
+updater.spec
 .gitignore
 gui.exe
+build/

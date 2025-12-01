@@ -1405,7 +1405,6 @@
   ('unittest.util',
    'C:\\Users\\Mit\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\unittest\\util.py',
    'PYMODULE'),
-  ('updater', 'C:\\Users\\Mit\\Documents\\Py\\Seed\\updater.py', 'PYMODULE'),
   ('urllib',
    'C:\\Users\\Mit\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\urllib\\__init__.py',
    'PYMODULE'),

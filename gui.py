@@ -1,6 +1,26 @@
 from tkinter import *
 from tkinter import ttk
-from updater import *
+import requests
+import subprocess
+import shutil
+
+VERSAO_ATUAL = "0.1.4"
+
+URL_INFO = "https://raw.githubusercontent.com/victormouramit/SeedControleAcesso/refs/heads/main/update.json"
+URL_UPDATER_EXE = "https://github.com/victormouramit/SeedControleAcesso/raw/refs/heads/main/updates/updater.exe"
+
+def tem_update():
+    info = requests.get(URL_INFO).json()
+    ultima = info["version"]
+    print(ultima)
+    return ultima, ultima != VERSAO_ATUAL, info["download_url"]
+
+def aplicar_update():
+    # Baixa updater.exe
+    r = requests.get(URL_UPDATER_EXE, stream=True)
+    with open(f"updater.exe", "wb") as f:
+        shutil.copyfileobj(r.raw, f)
+    subprocess.Popen(["updater.exe"])
 
 root = Tk()
 root.title("CONTROLE")
@@ -39,7 +59,7 @@ v_var = StringVar()
 if precisa:
     print(f"Nova versão {ultima} disponível! 🍰✨")
     v_var.set(f"Nova versão disponível.")
-    ttk.Button(frm,text="Baixar",command=lambda: aplicar_update(url,ultima)).grid(column=0,row=3)
+    ttk.Button(frm,text="Baixar",command=lambda: aplicar_update()).grid(column=0,row=3)
 else:
     print("Você já está na última versão 💖✨")
 
