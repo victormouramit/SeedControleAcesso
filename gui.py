@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from updater import *
 
 root = Tk()
 root.title("CONTROLE")
@@ -25,6 +26,7 @@ def un_block():
     painel_4_entry.config(state=state)
 
 ttk.Button(frm,text="Bloquear/Desbloquear",command=un_block).grid(column=0,row=0)
+ttk.Label(frm,text=f"v{VERSAO_ATUAL}").grid(column=0,row=1)
 
 # Painel 01
 ttk.Label(frm,text="Painel 1:").grid(column=1,row=0)
