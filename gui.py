@@ -2,12 +2,12 @@ from tkinter import *
 from tkinter import ttk
 from updater import *
 
-
 root = Tk()
 root.title("CONTROLE")
 frm = ttk.Frame(root,padding=10)
 frm.grid()
 
+# Incrementa o valor no gui e no painel
 def subir():
     valor = int(painel_1_value.get())
     painel_1_value.set(valor+1)
@@ -39,7 +39,7 @@ v_var = StringVar()
 if precisa:
     print(f"Nova versão {ultima} disponível! 🍰✨")
     v_var.set(f"Nova versão disponível.")
-    ttk.Button(frm,text="Baixar",command=lambda: aplicar_update(url)).grid(column=0,row=3)
+    ttk.Button(frm,text="Baixar",command=lambda: aplicar_update(url,ultima)).grid(column=0,row=3)
 else:
     print("Você já está na última versão 💖✨")
 
