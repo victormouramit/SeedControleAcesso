@@ -4,7 +4,7 @@ import zipfile
 import os
 import sys
 
-VERSAO_ATUAL = "0.1.1"
+VERSAO_ATUAL = "0.1.2"
 URL_INFO = "https://raw.githubusercontent.com/victormouramit/SeedControleAcesso/refs/heads/main/update.json"
 DOWNLOAD_VERSION = ""
 def tem_update():

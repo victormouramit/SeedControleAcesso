@@ -38,8 +38,8 @@ ultima, precisa, url = tem_update()
 v_var = StringVar()
 if precisa:
     print(f"Nova versão {ultima} disponível! 🍰✨")
-    v_var.set(f"Nova versão {ultima} disponível. Baixando Atualização...")
-    aplicar_update(url)
+    v_var.set(f"Nova versão disponível.")
+    ttk.Button(frm,text="Baixar",command=lambda: aplicar_update(url)).grid(column=0,row=3)
 else:
     print("Você já está na última versão 💖✨")
 
