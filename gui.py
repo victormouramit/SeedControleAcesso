@@ -70,7 +70,6 @@ ttk.Button(frm,text="Bloquear/Desbloquear",command=un_block).grid(column=0,row=0
 
 """ v = ttk.Label(frm,text="",textvariable=v_var)
 v.grid(column=0,row=2) """
-
 class Painel_Widget(ttk.Frame):
     def __init__(self, parent, label, variable = Painel, state = DISABLED):
         ttk.Frame.__init__(self,parent)
