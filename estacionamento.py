@@ -6,6 +6,7 @@ from data import *
 
 defense = Defense("172.25.76.167","Kd8SVmE009XB")
 parking_lots = defense.get_parking_lots()
+criar_arquivo_necessario()
 
 # Busca pelas cameras de entrada para acionar as saídas de alarme
 
@@ -25,7 +26,7 @@ class ID_Estacionamento(Enum):
     Two = "1"
     Three = "3"
 
-# Faz a verificação inicial para ver as vagas disponíveis em cada estacionamento
+# Faz a verificação inicial para ver as vagas disponíveis em cada estacionamento no defense
 for p in parking_lots:
     if p["idleParkingSpaceCount"] != None:
         number_parking_spaces = int(p["idleParkingSpaceCount"])
@@ -38,35 +39,69 @@ for p in parking_lots:
             estacionamentos[Estacionamento.BLOCO_II] = number_parking_spaces
         case ID_Estacionamento.Three.value:
             estacionamentos[Estacionamento.DED] = number_parking_spaces
+            
+# Lê os valores armazenados no arquivo numbers.json (memória do valor no painel)
+vagas_guardada = ler()
 
-
-print(estacionamentos)
+#print(estacionamentos)
 # Compara o Id do estacionamento para associar a camera correta
 # Verifica se os valores de vagas estão diferentes do valor inicial
 
 CAM_PASSWD = "Ct14!#6tVq@"
 
-def mudar_no_display(dif,estacionamento: str, action = 0):
+# Aumenta ou diminui os números no Painel
+def mudar_no_display(dif,estacionamento: Estacionamento, action = 0):
     """
         action 0 = sobe,
         action 1 = desce
     """
-    print(f"Valor mudado no display, action:{action},estacionamento:{estacionamento},")
+    old_value = estacionamento.value
+    new_value = "0"
+
+    if action == 0:
+        new_value = int(estacionamento.value) + int(dif)
+        display_change = "aumentado"
+    else:
+        new_value = int(estacionamento.value) - int(dif)
+        display_change = "diminuido"
+
+    print(f"{datetime.now()}\tValor {display_change} no display, de {old_value} para {new_value}, estacionamento:{estacionamento}")
+    time_between_pulses = .5
+    if dif > 20:
+        time_between_pulses = .2
     match estacionamento:
         case Estacionamento.BLOCO_I:
             c = Camera(Camera.BlocoI.Entrada, CAM_PASSWD)
             for _ in range(dif):
-                c.pulsate(1) if action == 0 else c.pulsate(2)
+                if action == 0:
+                    c.pulsate(1,time_between_pulses)
+                    vagas_guardada[Painel.One] = int(vagas_guardada[Painel.One]) + 1
+                else:
+                    c.pulsate(2,time_between_pulses)
+                    vagas_guardada[Painel.One] = int(vagas_guardada[Painel.One]) - 1
         case Estacionamento.BLOCO_II:
             c = Camera(Camera.BlocoII.Entrada, CAM_PASSWD)
             for _ in range(dif):
-                c.pulsate(1) if action == 0 else c.pulsate(2)
+                if action == 0:
+                    c.pulsate(1,time_between_pulses)
+                    vagas_guardada[Painel.Two] = int(vagas_guardada[Painel.Two]) + 1
+                else:
+                    c.pulsate(2,time_between_pulses)
+                    vagas_guardada[Painel.Two] = int(vagas_guardada[Painel.Two]) - 1
         case Estacionamento.DED:
             c_sobe = Camera(Camera.DED.Entrada, CAM_PASSWD)
             c_desce = Camera(Camera.DED.Saida, CAM_PASSWD)
             for _ in range(dif):
-                c_sobe.pulsate(1) if action == 0 else c_desce(1)
+                if action == 0:
+                    c_sobe.pulsate(1,time_between_pulses)
+                    vagas_guardada[Painel.Three] = int(vagas_guardada[Painel.Three]) + 1
+                else:
+                    c_desce(1,time_between_pulses)
+                    vagas_guardada[Painel.Three] = int(vagas_guardada[Painel.Three]) - 1
+    # Atualiza os valores do contador de vagas, para ocorrer uma modificação no GUI
+    criar_atualizar(vagas_guardada)
 
+# Compara os valores para ver se o numero de vagas do estacionamento mudou
 def verificar_estacionamento(estacionamento: Estacionamento,vagas_atual: int):
     #print(f"vagas em mem:{estacionamentos[estacionamento]} - {vagas_atual}")
     if estacionamentos[estacionamento] >  vagas_atual:
@@ -77,9 +112,6 @@ def verificar_estacionamento(estacionamento: Estacionamento,vagas_atual: int):
         dif = vagas_atual - estacionamentos[estacionamento]
         mudar_no_display(dif,estacionamento,1)
         estacionamentos[estacionamento] = vagas_atual
-
-
-
 
 # Analisa todos os estacionamentos em busca de alguma mudança no valor contando o número de vagas
 def analisar_estacionamentos():

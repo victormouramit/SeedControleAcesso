@@ -68,20 +68,20 @@ class Defense:
         tempo = datetime.now()
         while True:
             time.sleep(300)
-            if datetime.now >= tempo + timedelta(minutes=20):
+            if datetime.now() >= tempo + timedelta(minutes=20):
                 new_signature = MD5.new(bytes(f"{self.temp4}:{self.token}")).hexdigest()
                 r = requests.post(f"{self.server_address}{POST_UPDATE_TOKEN_ENDPOINT}",json={"signature": new_signature}, headers=self.headers)
                 response = json.loads(r.text)
                 self.token = response["data"]["token"]
                 self.refresh_token_header()
                 tempo = datetime.now()
-                print("20 minutos se passaram: Token Atualizado")
+                print(f"{datetime.now()}\t20 minutos se passaram: Token Atualizado")
     def keep_alive_token(self):
         tempo = datetime.now()
         while True:
             time.sleep(5)
             if datetime.now() >= tempo + timedelta(seconds=20):
-                print("20 segundos se passaram: Token Sendo Mantido Vivo")
+                print(f"{datetime.now()}\t20 segundos se passaram: Token Sendo Mantido Vivo")
                 r = requests.put(f"{self.server_address}{PUT_KEEP_ALIVE_ENDPOINT}", json={ }, headers=self.headers)
                 response = json.loads(r.text)
                 self.token = response["data"]["token"]
@@ -102,4 +102,3 @@ class Defense:
         j = json.loads(r.text)
         return j["data"]["deviceIp"]
         #print(r.text)
-
