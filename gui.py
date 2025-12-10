@@ -114,6 +114,7 @@ def atualizar():
     c.painel_value.set(vagas_guardadas[Painel.One.value])
     c2.painel_value.set(vagas_guardadas[Painel.Two.value])
     c3.painel_value.set(vagas_guardadas[Painel.Three.value])
+    c4.painel_value.set(vagas_guardadas[Painel.Four.value])
     root.after(2000,atualizar) # 2s
     print(f"{datetime.now()}\t Fim da Atualização")
 
