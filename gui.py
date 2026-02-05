@@ -1,28 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from data import *
-#import requests
-#import shutil
-#from defense_api import *
 
 VERSAO_ATUAL = "0.1.4"
-
-""" URL_INFO = "https://raw.githubusercontent.com/victormouramit/SeedControleAcesso/refs/heads/main/update.json"
-URL_UPDATER_EXE = "https://github.com/victormouramit/SeedControleAcesso/raw/refs/heads/main/updates/updater.exe"
-
-def tem_update():
-    info = requests.get(URL_INFO).json()
-    ultima = info["version"]
-    print(ultima)
-    return ultima, ultima != VERSAO_ATUAL, info["download_url"]
-
-def aplicar_update():
-    # Baixa updater.exe
-    r = requests.get(URL_UPDATER_EXE, stream=True)
-    with open(f"updater.exe", "wb") as f:
-        shutil.copyfileobj(r.raw, f)
-    subprocess.Popen(["updater.exe"])
- """
 
 #d = Defense("172.25.76.167","Kd8SVmE009XB")
 root = Tk()
@@ -38,12 +18,19 @@ def mudar_painel_gui(Painel:Painel,entry_value: StringVar,action = 0):
     # Atualiza GUI
     valor = int(entry_value.get())
     
-    novo_valor = valor+1 if action == 0 else valor-1
+    if action == 0:
+        novo_valor = valor+1
+    else:
+        novo_valor = valor-1
 
     entry_value.set(novo_valor)
-      # Atualiza no arquivo
+    # Atualiza no arquivo
     vagas_guardadas[Painel.value] = novo_valor
     criar_atualizar(vagas_guardadas)
+    
+    print(f"Painel:{Painel}, action:{action}")
+    
+    # Muda o número de vagas exibida no painel
     mudar_vagas_painel(Painel,action)
 
 def un_block():
@@ -109,14 +96,15 @@ c4 = Painel_Widget(frm, Painel.Four.value,Painel.Four)
 c4.grid(column=2,row=1)
 
 def atualizar():
-    vagas_guardadas = ler()
-    print(f"{datetime.now()}\t Atualizando Interface")
-    c.painel_value.set(vagas_guardadas[Painel.One.value])
-    c2.painel_value.set(vagas_guardadas[Painel.Two.value])
-    c3.painel_value.set(vagas_guardadas[Painel.Three.value])
-    c4.painel_value.set(vagas_guardadas[Painel.Four.value])
-    root.after(2000,atualizar) # 2s
-    print(f"{datetime.now()}\t Fim da Atualização")
-
-atualizar()
+    vagas_no_arquivo = ler()
+    if vagas_no_arquivo[Painel.One.value] != vagas_guardadas[Painel.One.value]:
+        c.painel_value.set(vagas_no_arquivo[Painel.One.value])
+        # atualiza valor de c
+    elif vagas_no_arquivo[Painel.Two.value] != vagas_guardadas[Painel.Two.value]:
+        c2.painel_value.set(vagas_no_arquivo[Painel.Two.value])
+        # atualiza valor de c2
+    elif vagas_no_arquivo[Painel.Three.value] != vagas_guardadas[Painel.Three.value]:
+        c3.painel_value.set(vagas_no_arquivo[Painel.Three.value])
+        # atualiza valor de c3
+    
 root.mainloop()
